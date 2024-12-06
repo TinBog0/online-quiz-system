@@ -11,6 +11,44 @@ CREATE TABLE Professor (
     Email NVARCHAR(100) UNIQUE NOT NULL
 );
 
+CREATE TABLE Student (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    FirstName NVARCHAR(50) NOT NULL,
+    LastName NVARCHAR(50) NOT NULL,
+    Email NVARCHAR(100) UNIQUE NOT NULL,
+    PasswordHash NVARCHAR(255) NOT NULL 
+);
+
+CREATE TABLE Course (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    Name NVARCHAR(100) NOT NULL,
+    Description NVARCHAR(MAX),
+    ProfessorId INT NOT NULL,
+    FOREIGN KEY (ProfessorId) REFERENCES Professor(Id) ON DELETE CASCADE
+);
+
+CREATE TABLE QuizAttempt (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    StudentId INT NOT NULL,
+    QuizId INT NOT NULL,
+    AttemptDate DATETIME DEFAULT GETDATE(),
+    Score INT, 
+    FOREIGN KEY (StudentId) REFERENCES Student(Id) ON DELETE CASCADE,
+    FOREIGN KEY (QuizId) REFERENCES Quiz(Id) ON DELETE CASCADE
+);
+
+CREATE TABLE AnswerSubmission (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    QuizAttemptId INT NOT NULL,
+    QuestionId INT NOT NULL,
+    SelectedAnswerId INT NULL,
+    IsCorrect BIT DEFAULT 0,
+    FOREIGN KEY (QuizAttemptId) REFERENCES QuizAttempt(Id) ON DELETE CASCADE,
+    FOREIGN KEY (QuestionId) REFERENCES Question(Id) ON DELETE CASCADE,
+    FOREIGN KEY (SelectedAnswerId) REFERENCES Answer(Id) ON DELETE SET NULL
+);
+
+
 CREATE TABLE Quiz (
     Id INT IDENTITY(1,1) PRIMARY KEY,
     ProfessorId INT NOT NULL,
@@ -19,7 +57,9 @@ CREATE TABLE Quiz (
     DateCreated DATETIME DEFAULT GETDATE(),
     TimeLimit INT, 
     IsPublished BIT DEFAULT 0,
-    FOREIGN KEY (ProfessorId) REFERENCES Professor(Id) ON DELETE CASCADE
+    CourseId INT,
+    FOREIGN KEY (ProfessorId) REFERENCES Professor(Id) ON DELETE CASCADE,
+    FOREIGN KEY (CourseId) REFERENCES Course(Id) ON DELETE CASCADE
 );
 
 CREATE TABLE Question (
@@ -37,3 +77,16 @@ CREATE TABLE Answer (
     IsCorrect BIT DEFAULT 0,
     FOREIGN KEY (QuestionId) REFERENCES Question(Id) ON DELETE CASCADE
 );
+
+CREATE TABLE Role (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    Name NVARCHAR(50) NOT NULL UNIQUE
+);
+
+CREATE TABLE UserRole (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    UserId INT NOT NULL, 
+    RoleId INT NOT NULL,
+    FOREIGN KEY (RoleId) REFERENCES Role(Id) ON DELETE CASCADE
+);
+
