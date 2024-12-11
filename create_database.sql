@@ -4,7 +4,12 @@ GO
 USE OnlineQuizSystem;
 GO
 
-CREATE TABLE User (
+CREATE TABLE Role (
+    Id INT PRIMARY KEY IDENTITY,
+    Name NVARCHAR(50) UNIQUE NOT NULL
+);
+
+CREATE TABLE [User] (
     Id INT PRIMARY KEY IDENTITY,
     FirstName NVARCHAR(50) NOT NULL,
     LastName NVARCHAR(50) NOT NULL,
@@ -12,12 +17,7 @@ CREATE TABLE User (
     PwdHash NVARCHAR(256) NOT NULL,
     PwdSalt NVARCHAR(256) NOT NULL,
     RoleId INT NOT NULL,
-    FOREIGN KEY (RoleId) REFERENCES Role(Id) ON DELETE CASCADE
-);
-
-CREATE TABLE Role (
-    Id INT PRIMARY KEY IDENTITY,
-    Name NVARCHAR(50) UNIQUE NOT NULL
+    FOREIGN KEY (RoleId) REFERENCES Role(Id)
 );
 
 CREATE TABLE Course (
@@ -25,7 +25,7 @@ CREATE TABLE Course (
     Name NVARCHAR(100) NOT NULL,
     Description NVARCHAR(MAX),
     ProfessorId INT NOT NULL,
-    FOREIGN KEY (ProfessorId) REFERENCES User(Id) ON DELETE CASCADE
+    FOREIGN KEY (ProfessorId) REFERENCES [User](Id)
 );
 
 CREATE TABLE Quiz (
@@ -37,8 +37,8 @@ CREATE TABLE Quiz (
     TimeLimit INT, 
     IsPublished BIT DEFAULT 0,
     CourseId INT,
-    FOREIGN KEY (ProfessorId) REFERENCES User(Id) ON DELETE CASCADE,
-    FOREIGN KEY (CourseId) REFERENCES Course(Id) ON DELETE CASCADE
+    FOREIGN KEY (ProfessorId) REFERENCES [User](Id),
+    FOREIGN KEY (CourseId) REFERENCES Course(Id)
 );
 
 CREATE TABLE Question (
@@ -46,7 +46,7 @@ CREATE TABLE Question (
     QuizId INT NOT NULL,
     QuestionText NVARCHAR(MAX) NOT NULL,
     Points INT NOT NULL,
-    FOREIGN KEY (QuizId) REFERENCES Quiz(Id) ON DELETE CASCADE
+    FOREIGN KEY (QuizId) REFERENCES Quiz(Id)
 );
 
 CREATE TABLE Answer (
@@ -54,7 +54,7 @@ CREATE TABLE Answer (
     QuestionId INT NOT NULL,
     AnswerText NVARCHAR(MAX) NOT NULL,
     IsCorrect BIT DEFAULT 0,
-    FOREIGN KEY (QuestionId) REFERENCES Question(Id) ON DELETE CASCADE
+    FOREIGN KEY (QuestionId) REFERENCES Question(Id)
 );
 
 
@@ -65,8 +65,8 @@ CREATE TABLE QuizAttempt (
     QuizId INT NOT NULL,
     AttemptDate DATETIME DEFAULT GETDATE(),
     Score INT, 
-    FOREIGN KEY (StudentId) REFERENCES User(Id) ON DELETE CASCADE,
-    FOREIGN KEY (QuizId) REFERENCES Quiz(Id) ON DELETE CASCADE
+    FOREIGN KEY (StudentId) REFERENCES [User](Id),
+    FOREIGN KEY (QuizId) REFERENCES Quiz(Id)
 );
 
 CREATE TABLE AnswerSubmission (
@@ -75,7 +75,7 @@ CREATE TABLE AnswerSubmission (
     QuestionId INT NOT NULL,
     SelectedAnswerId INT NULL,
     IsCorrect BIT DEFAULT 0,
-    FOREIGN KEY (QuizAttemptId) REFERENCES QuizAttempt(Id) ON DELETE CASCADE,
-    FOREIGN KEY (QuestionId) REFERENCES Question(Id) ON DELETE CASCADE,
-    FOREIGN KEY (SelectedAnswerId) REFERENCES Answer(Id) ON DELETE SET NULL
+    FOREIGN KEY (QuizAttemptId) REFERENCES QuizAttempt(Id),
+    FOREIGN KEY (QuestionId) REFERENCES Question(Id),
+    FOREIGN KEY (SelectedAnswerId) REFERENCES Answer(Id)
 );
