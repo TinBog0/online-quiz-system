@@ -79,3 +79,11 @@ CREATE TABLE AnswerSubmission (
     FOREIGN KEY (QuestionId) REFERENCES Question(Id),
     FOREIGN KEY (SelectedAnswerId) REFERENCES Answer(Id)
 );
+
+INSERT INTO [Role] (Name) VALUES ('Professor'), ('Student')
+
+INSERT INTO [User] (FirstName, LastName, Email, PwdHash, PwdSalt, RoleId)
+VALUES ('Admin', 'User', 'admin@example.com', 'admin', '', 1);
+
+INSERT INTO Course (Name, Description, ProfessorId)
+VALUES ('Math', 'This is a basic Math course.', 1);
