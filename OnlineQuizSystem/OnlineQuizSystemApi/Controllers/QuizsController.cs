@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OnlineQuizSystemApi.DTOs;
 using OnlineQuizSystemApi.Models;
@@ -10,10 +11,12 @@ namespace OnlineQuizSystemApi.Controllers
     public class QuizsController : ControllerBase
     {
         private readonly OnlineQuizSystemContext _context;
+        private readonly IMapper _mapper;
 
-        public QuizsController(OnlineQuizSystemContext context)
+        public QuizsController(OnlineQuizSystemContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         // GET: api/Quizs
@@ -68,7 +71,6 @@ namespace OnlineQuizSystemApi.Controllers
         }
 
         // POST: api/Quizs
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Quiz>> PostQuiz(QuizDto quizDto)
         {
@@ -77,24 +79,7 @@ namespace OnlineQuizSystemApi.Controllers
                 return BadRequest(ModelState);
             }
 
-            var quiz = new Quiz
-            {
-                Title = quizDto.Title,
-                Description = quizDto.Description,
-                CourseId = quizDto.CourseId,
-                ProfessorId = quizDto.ProfessorId,
-                DateCreated = DateTime.Now,
-                Questions = quizDto.Questions.Select(q => new Question
-                {
-                    QuestionText = q.QuestionText,
-                    Points = q.Points,
-                    Answers = q.Answers.Select(a => new Answer
-                    {
-                        AnswerText = a.AnswerText,
-                        IsCorrect = a.IsCorrect
-                    }).ToList()
-                }).ToList()
-            };
+            var quiz = _mapper.Map<Quiz>(quizDto);
 
             _context.Quizzes.Add(quiz);
             await _context.SaveChangesAsync();

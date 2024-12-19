@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using OnlineQuizSystemApi.Mapping;
 using OnlineQuizSystemApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +13,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<OnlineQuizSystemContext>(options => {
     options.UseSqlServer(builder.Configuration.GetConnectionString("OnlineQuizSystemDBConnection"));
 });
+
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 var app = builder.Build();
 
