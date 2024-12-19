@@ -16,6 +16,12 @@ namespace OnlineQuizSystemApi.DTOs
         public int ProfessorId { get; set; }
 
         [Required]
+        public int? TimeLimit { get; set; } 
+
+        [Required]
+        public bool IsPublished { get; set; }
+
+        [Required]
         public List<QuestionDto> Questions { get; set; }
     }
 }
