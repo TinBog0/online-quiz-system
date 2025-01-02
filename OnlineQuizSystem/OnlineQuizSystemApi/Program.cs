@@ -1,6 +1,9 @@
 using Microsoft.EntityFrameworkCore;
+using OnlineQuizSystemApi.Interfaces.Books;
+using OnlineQuizSystemApi.Interfaces.Quizes;
 using OnlineQuizSystemApi.Mapping;
 using OnlineQuizSystemApi.Models;
+using OnlineQuizSystemApi.Repositories.Quizes;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +18,8 @@ builder.Services.AddDbContext<OnlineQuizSystemContext>(options => {
 });
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));
+builder.Services.AddScoped<IQuizRepository, QuizRepository>();
+builder.Services.AddScoped<IQuizService, QuizService>();
 
 var app = builder.Build();
 

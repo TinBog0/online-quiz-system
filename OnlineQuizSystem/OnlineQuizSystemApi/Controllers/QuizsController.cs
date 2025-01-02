@@ -1,7 +1,6 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
 using OnlineQuizSystemApi.DTOs;
+using OnlineQuizSystemApi.Interfaces.Quizes;
 using OnlineQuizSystemApi.Models;
 
 namespace OnlineQuizSystemApi.Controllers
@@ -10,79 +9,44 @@ namespace OnlineQuizSystemApi.Controllers
     [ApiController]
     public class QuizsController : ControllerBase
     {
-        private readonly OnlineQuizSystemContext _context;
-        private readonly IMapper _mapper;
+        private readonly IQuizService _quizService;
 
-        public QuizsController(OnlineQuizSystemContext context, IMapper mapper)
+        public QuizsController(IQuizService quizService)
         {
-            _context = context;
-            _mapper = mapper;
+            _quizService = quizService;
         }
 
         // GET: api/Quizs
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Quiz>>> GetQuizzes()
+        public async Task<ActionResult<IEnumerable<QuizDto>>> GetAllQuizzes()
         {
-            return await _context.Quizzes.ToListAsync();
+            var quizzes = await _quizService.GetAllQuizzesAsync();
+            return Ok(quizzes);
         }
 
         // GET: api/Quizs/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<QuizDto>> GetQuiz(int id)
+        public async Task<ActionResult<QuizDto>> GetQuizById(int id)
         {
-            var quiz = await _context.Quizzes
-                .Include(q => q.Questions)
-                .ThenInclude(q => q.Answers) 
-                .FirstOrDefaultAsync(q => q.Id == id);
-
-
-            if (quiz == null)
+            try
             {
-                return NotFound();
+                var quiz = await _quizService.GetQuizByIdAsync(id);
+                return Ok(quiz);
             }
-
-            return _mapper.Map<QuizDto>(quiz);
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
        
 
         // POST: api/Quizs
         [HttpPost]
-        public async Task<ActionResult<Quiz>> PostQuiz(QuizDto quizDto)
+        public async Task<ActionResult<Quiz>> AddQuiz(QuizDto quizDto)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var quiz = _mapper.Map<Quiz>(quizDto);
-
-            _context.Quizzes.Add(quiz);
-            await _context.SaveChangesAsync();
-
-
-            return NoContent();
-        }
-
-        // DELETE: api/Quizs/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteQuiz(int id)
-        {
-            var quiz = await _context.Quizzes.FindAsync(id);
-            if (quiz == null)
-            {
-                return NotFound();
-            }
-
-            _context.Quizzes.Remove(quiz);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool QuizExists(int id)
-        {
-            return _context.Quizzes.Any(e => e.Id == id);
+              await _quizService.AddQuizAsync(quizDto);
+              return Ok();            
         }
     }
 }
