@@ -28,47 +28,23 @@ namespace OnlineQuizSystemApi.Controllers
 
         // GET: api/Quizs/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Quiz>> GetQuiz(int id)
+        public async Task<ActionResult<QuizDto>> GetQuiz(int id)
         {
-            var quiz = await _context.Quizzes.FindAsync(id);
+            var quiz = await _context.Quizzes
+                .Include(q => q.Questions)
+                .ThenInclude(q => q.Answers) 
+                .FirstOrDefaultAsync(q => q.Id == id);
+
 
             if (quiz == null)
             {
                 return NotFound();
             }
 
-            return quiz;
+            return _mapper.Map<QuizDto>(quiz);
         }
 
-        // PUT: api/Quizs/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutQuiz(int id, Quiz quiz)
-        {
-            if (id != quiz.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(quiz).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!QuizExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
+       
 
         // POST: api/Quizs
         [HttpPost]

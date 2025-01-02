@@ -4,6 +4,8 @@ namespace OnlineQuizSystemApi.DTOs
 {
     public class QuestionDto
     {
+        public int Id { get; set; }
+
         [Required]
         public string QuestionText { get; set; }
 
