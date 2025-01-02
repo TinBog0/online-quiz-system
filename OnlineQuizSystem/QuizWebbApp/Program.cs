@@ -2,19 +2,22 @@ using QuizWebbApp.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddRazorPages();
+//builder.Services.AddScoped<IQuizService, QuizService>();
 
-// Register QuizService and its HttpClient in one go
+
 builder.Services.AddHttpClient<QuizService>("QuizApiClient", client =>
 {
     client.BaseAddress = new Uri("http://localhost:5272");
 });
 
 var app = builder.Build();
+app.MapGet("/", context =>
+{
+    context.Response.Redirect("/Login");
+    return Task.CompletedTask;
+});
 
-
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
