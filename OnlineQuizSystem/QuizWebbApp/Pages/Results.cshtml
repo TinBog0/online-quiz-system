@@ -1,0 +1,142 @@
+﻿@page "/results"
+@model ResultsModel
+@{
+    ViewData["Title"] = "Results";
+}
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light" style="background-color: #3b82f6;">
+    <a class="navbar-brand text-white" href="/">Online Quiz System</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
+            aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon" style="color:#fff;"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item active"><a class="nav-link text-white" href="/">Home</a></li>
+            <li class="nav-item"><a class="nav-link text-white" href="/About">About</a></li>
+            <li class="nav-item"><a class="nav-link text-white" href="/Contact">Contact</a></li>
+            <li class="nav-item"><a class="nav-link text-white" href="/Profile">Profile</a></li>
+            <li class="nav-item"><a class="nav-link text-white" href="/Settings">Settings</a></li>
+        </ul>
+    </div>
+</nav>
+
+<!-- Main Content -->
+<div class="container mt-5">
+    <h2 class="text-center text-primary">Results</h2>
+    <table class="table table-bordered mt-4">
+        <thead>
+            <tr>
+                <th>Question</th>
+                <th>Your Answer</th>
+                <th>Correct Answer</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Hardcoded = ovdje kasnije ide fetchanje -->
+            <tr>
+                <td>What is the capital of France?</td>
+                <td>Paris</td>
+                <td>Paris</td>
+                <td><span class="text-success">Correct</span></td>
+            </tr>
+            <tr>
+                <td>What is 5 + 7?</td>
+                <td>11</td>
+                <td>12</td>
+                <td><span class="text-danger">Incorrect</span></td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="text-center mt-3">
+        <a href="/" class="btn btn-primary">Back to Home</a>
+    </div>
+    <!-- Animated Progress Bar -->
+    <div class="text-center mt-5">
+        <h3>Your Quiz Score</h3>
+        <div class="progress" style="height: 30px; width: 300px; margin: 0 auto; position: relative;">
+            <div class="progress-bar bg-success" role="progressbar"
+                 style="width: 0;"
+                 id="score-bar"
+                 aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
+        <div id="score-text" style="margin-top: 10px; font-weight: bold;">0 / 10 correct</div>
+    </div>
+
+    <style>
+        .progress {
+            font-size: 1rem;
+        }
+
+        .progress-bar {
+            transition: width 1s ease-in-out;
+        }
+    </style>
+
+    <script>
+        // Suppose you got the user's correct count and total from somewhere
+        const correctAnswers = 7;
+        const totalQuestions = 10;
+        const scorePercent = (correctAnswers / totalQuestions) * 100;
+
+        // Animate the progress bar
+        const bar = document.getElementById('score-bar');
+        const scoreText = document.getElementById('score-text');
+
+        // Set the text
+        scoreText.textContent = `${correctAnswers} / ${totalQuestions} correct`;
+
+        // Animate the width
+        setTimeout(() => {
+            bar.style.width = scorePercent + '%';
+            bar.setAttribute('aria-valuenow', scorePercent);
+        }, 500);
+    </script>
+
+    <!-- Chart Container -->
+    <div class="container mt-5 text-center">
+        <h3>Your Quiz Score</h3>
+        <canvas id="scoreChart" width="300" height="300"></canvas>
+    </div>
+
+    <!-- Chart.js (CDN) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        // Dummy data
+        const correct = 7;
+        const incorrect = 3;
+
+        const ctx = document.getElementById('scoreChart').getContext('2d');
+        const scoreChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Correct', 'Incorrect'],
+                datasets: [{
+                    data: [correct, incorrect],
+                    backgroundColor: ['#34d399', '#f87171'], // green, red
+                    hoverBackgroundColor: ['#10b981', '#ef4444'],
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                cutout: '60%', // donut hole size
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                    },
+                },
+                animation: {
+                    animateScale: true,
+                    animateRotate: true
+                }
+            }
+        });
+    </script>
+
+
+</div>
