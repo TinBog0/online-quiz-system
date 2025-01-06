@@ -77,32 +77,28 @@
     </style>
 
     <script>
-        // Suppose you got the user's correct count and total from somewhere
         const correctAnswers = 7;
         const totalQuestions = 10;
         const scorePercent = (correctAnswers / totalQuestions) * 100;
 
-        // Animate the progress bar
         const bar = document.getElementById('score-bar');
         const scoreText = document.getElementById('score-text');
 
-        // Set the text
         scoreText.textContent = `${correctAnswers} / ${totalQuestions} correct`;
 
-        // Animate the width
         setTimeout(() => {
             bar.style.width = scorePercent + '%';
             bar.setAttribute('aria-valuenow', scorePercent);
         }, 500);
     </script>
 
-    <!-- Chart Container -->
+    <!-- Chart  -->
     <div class="container mt-5 text-center">
         <h3>Your Quiz Score</h3>
         <canvas id="scoreChart" width="300" height="300"></canvas>
     </div>
 
-    <!-- Chart.js (CDN) -->
+    
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script>
@@ -117,14 +113,14 @@
                 labels: ['Correct', 'Incorrect'],
                 datasets: [{
                     data: [correct, incorrect],
-                    backgroundColor: ['#34d399', '#f87171'], // green, red
+                    backgroundColor: ['#34d399', '#f87171'], 
                     hoverBackgroundColor: ['#10b981', '#ef4444'],
                     borderWidth: 2
                 }]
             },
             options: {
                 responsive: true,
-                cutout: '60%', // donut hole size
+                cutout: '60%', 
                 plugins: {
                     legend: {
                         position: 'bottom',

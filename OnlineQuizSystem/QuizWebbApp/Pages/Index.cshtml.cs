@@ -1,23 +1,27 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using QuizWebbApp.Services;
-using QuizWebbApp.DTOs; 
+using QuizWebbApp.DTOs;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace QuizWebbApp.Pages;
-public class IndexModel : PageModel
+//SRP -- fetching and displaying quizs
+
+namespace QuizWebbApp.Pages
 {
-    private readonly QuizService _quizService;
-
-    public IEnumerable<QuizDto> Quizzes { get; set; }
-
-    public IndexModel(QuizService quizService)
+    public class Index : PageModel
     {
-        _quizService = quizService;
-    }
+        private readonly IQuizService _quizService;
 
-    public async Task OnGetAsync()
-    {
-        Quizzes = await _quizService.GetAllQuizzesAsync();
+        public IEnumerable<QuizDto> Quizzes { get; set; }
+
+        public Index(IQuizService quizService)
+        {
+            _quizService = quizService;
+        }
+
+        public async Task OnGetAsync()
+        {
+            Quizzes = await _quizService.GetAllQuizzesAsync();
+        }
     }
 }
