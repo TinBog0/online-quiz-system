@@ -1,8 +1,14 @@
 ﻿@page
-@model IndexModel
+@model Index
 @{
     ViewData["Title"] = "Home";
+}
 
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger text-center mt-3">
+        @TempData["Error"]
+    </div>
 }
 
 <style>
@@ -125,6 +131,7 @@
             opacity: 1;
         }
     }
+
 </style>
 
 <!-- Navbar -->
@@ -177,7 +184,6 @@
                        style="max-width: 300px;"
                        name="quizId"
                        required />
-
                 <button type="submit" class="btn btn-primary" style="width: 150px;">
                     Play
                 </button>
