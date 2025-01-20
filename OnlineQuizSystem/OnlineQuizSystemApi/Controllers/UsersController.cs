@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using OnlineQuizSystemApi.DTOs;
+using OnlineQuizSystemApi.Logging;
 using OnlineQuizSystemApi.Models;
+using OnlineQuizSystemApi.Security;
 
 namespace OnlineQuizSystemApi.Controllers
 {
@@ -9,10 +12,75 @@ namespace OnlineQuizSystemApi.Controllers
     public class UsersController : ControllerBase
     {
         private readonly OnlineQuizSystemContext _context;
+        private readonly LoggerBase _consoleLogger;
+        private readonly LoggerBase _fileLogger;
+        private readonly string path  = "C:\\Users\\Tin\\Desktop\\online-quiz-system\\OnlineQuizSystem\\logs.txt";
 
         public UsersController(OnlineQuizSystemContext context)
         {
             _context = context;
+            _consoleLogger = Logging.LoggerFactory.CreateLogger("Console");
+            _fileLogger = Logging.LoggerFactory.CreateLogger("File", true, path);
+        }
+
+        [HttpPost("register")]
+        public async Task<IActionResult> Register(RegisterDto registerDto)
+        {
+            var existingUser = await _context.Users.AnyAsync(u => u.Email == registerDto.Email);
+            if (existingUser)
+            {
+                return BadRequest("Email is already registered.");
+            }
+
+            var roleExists = await _context.Roles.AnyAsync(r => r.Id == registerDto.RoleId);
+            if (!roleExists)
+            {
+                return BadRequest("Invalid RoleId.");
+            }
+
+            var passwordHash = PasswordHelper.HashPassword(registerDto.Password, out var salt);
+
+            var user = new User
+            {
+                Email = registerDto.Email,
+                PwdHash = passwordHash,
+                PwdSalt = salt,
+                FirstName = registerDto.FirstName,
+                LastName = registerDto.LastName,
+                RoleId = registerDto.RoleId
+            };
+
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
+
+            _consoleLogger.Log("Registration successful.");
+            _fileLogger.Log("Registration successful.");
+            return Ok("User registered successfully!");
+        }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login(LoginDto loginDto)
+        {
+
+            var user = await _context.Users.SingleOrDefaultAsync(u => u.Email == loginDto.Email);
+
+            if (user == null)
+            {
+                return Unauthorized("Invalid email or password.");
+            }
+
+
+            var isPasswordValid = PasswordHelper.VerifyPassword(loginDto.Password, user.PwdHash, user.PwdSalt);
+            if (!isPasswordValid)
+            {
+                _fileLogger.Log("Login failed.");
+                _consoleLogger.Log("Login failed.");
+                return Unauthorized("Invalid email or password.");
+            }
+
+            _consoleLogger.Log("Login successful.");
+            _fileLogger.Log("Login successful.");
+            return Ok(new { Message = "Login successful!" });
         }
 
         // GET: api/Users
@@ -34,64 +102,6 @@ namespace OnlineQuizSystemApi.Controllers
             }
 
             return user;
-        }
-
-        // PUT: api/Users/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutUser(int id, User user)
-        {
-            if (id != user.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(user).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!UserExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        // POST: api/Users
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<User>> PostUser(User user)
-        {
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetUser", new { id = user.Id }, user);
-        }
-
-        // DELETE: api/Users/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUser(int id)
-        {
-            var user = await _context.Users.FindAsync(id);
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            _context.Users.Remove(user);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
         }
 
         private bool UserExists(int id)

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OnlineQuizSystemApi.DTOs;
+using OnlineQuizSystemApi.Grading;
 using OnlineQuizSystemApi.Interfaces.Quizes;
 using OnlineQuizSystemApi.Models;
 
@@ -10,10 +11,32 @@ namespace OnlineQuizSystemApi.Controllers
     public class QuizsController : ControllerBase
     {
         private readonly IQuizService _quizService;
+        private readonly GradingContext _gradingContext;
 
         public QuizsController(IQuizService quizService)
         {
             _quizService = quizService;
+            _gradingContext = new GradingContext();
+        }
+
+        [HttpGet("grade-quiz")]
+        public IActionResult GradeQuizAttempt(int correctAnswers, int totalQuestions, string gradingMethod)
+        {
+            switch (gradingMethod.ToLower().Trim())
+            {
+                case "percentage":
+                    _gradingContext.SetStrategy(new PercentageGradingStrategy());
+                    break;
+                case "passfail":
+                    _gradingContext.SetStrategy(new PassFailGradingStrategy());
+                    break;
+                default:
+                    return BadRequest("Invalid grading method.");
+            }
+
+            var grade = _gradingContext.ExecuteGrading(correctAnswers, totalQuestions);
+
+            return Ok(new { Grade = grade });
         }
 
         // GET: api/Quizs

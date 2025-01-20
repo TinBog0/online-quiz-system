@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
+﻿
 namespace OnlineQuizSystemApi.Models;
 
 public partial class Question
