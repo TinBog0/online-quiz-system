@@ -1,6 +1,7 @@
 using QuizWebbApp.Services;
 using Microsoft.Extensions.Options;
 using QuizWebbApp.Config;
+using QuizWebbApp.Interface;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,9 +16,11 @@ builder.Services.AddSession(options =>
 });
 
 builder.Services.Configure<ApiSettings>(builder.Configuration.GetSection("ApiSettings"));
+builder.Services.AddScoped<IQuizFacade, QuizFacade>();
 
 builder.Services.AddHttpClient<IQuizService, QuizService>((serviceProvider, client) =>
 {
+    
     var apiSettings = serviceProvider.GetRequiredService<IOptions<ApiSettings>>().Value;
     client.BaseAddress = new Uri(apiSettings.BaseUrl);
 });

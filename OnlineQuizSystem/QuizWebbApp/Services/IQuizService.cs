@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 namespace QuizWebbApp.Services
 {
     // OCP -- extending without changing existing code
-    // LSP -- if needed other service we can inject this interface and quizroom woruld work
+    // LSP -- if other service is needed we can inject this interface and quizroom woruld work
     // ISP -- small interface, methods related to quiz
-    // DIP -- quizroom and index depent on this interface not on quizservice, configurated in programcs
+    // DIP -- 
     public interface IQuizService
     {
         Task<IEnumerable<QuizDto>> GetAllQuizzesAsync();

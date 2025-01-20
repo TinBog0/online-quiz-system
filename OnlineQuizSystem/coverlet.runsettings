@@ -1,0 +1,19 @@
+﻿<RunSettings>
+	<DataCollectionRunSettings>
+		<DataCollectors>
+			<DataCollector friendlyName="XPlat Code Coverage">
+				<Configuration>
+					<ExcludeByFile>**/*.cshtml</ExcludeByFile>
+					<ExcludeByFile>*src/QuizWebbApp/Program.cs</ExcludeByFile>
+					<ExcludeByFile>**/Program.cs</ExcludeByFile>
+					<ExcludeByFile>**\\Program.cs</ExcludeByFile>
+					<ExcludeByFile>**/Program.*</ExcludeByFile>
+					<ExcludeByFile>*QuizWebbApp\Program.cs</ExcludeByFile>
+
+					<ExcludeByFile>**/AnswerDto.cs</ExcludeByFile>
+					<ExcludeByFile>**/Error.cshtml.cs</ExcludeByFile>
+				</Configuration>
+			</DataCollector>
+		</DataCollectors>
+	</DataCollectionRunSettings>
+</RunSettings>

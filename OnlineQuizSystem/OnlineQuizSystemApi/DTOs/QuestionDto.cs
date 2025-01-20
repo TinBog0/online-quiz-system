@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace OnlineQuizSystemApi.DTOs
 {
@@ -13,6 +14,7 @@ namespace OnlineQuizSystemApi.DTOs
         public int Points { get; set; }
 
         [Required]
+        [ExcludeFromCodeCoverage]
         public List<AnswerDto> Answers { get; set; }
     }
 }

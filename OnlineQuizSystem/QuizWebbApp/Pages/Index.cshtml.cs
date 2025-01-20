@@ -8,13 +8,13 @@ using System.Threading.Tasks;
 
 namespace QuizWebbApp.Pages
 {
-    public class Index : PageModel
+    public class IndexPage : PageModel
     {
         private readonly IQuizService _quizService;
 
         public IEnumerable<QuizDto> Quizzes { get; set; }
 
-        public Index(IQuizService quizService)
+        public IndexPage(IQuizService quizService)
         {
             _quizService = quizService;
         }

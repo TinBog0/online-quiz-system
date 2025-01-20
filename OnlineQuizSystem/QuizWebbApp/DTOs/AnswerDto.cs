@@ -1,5 +1,8 @@
-﻿namespace QuizWebbApp.DTOs
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace QuizWebbApp.DTOs
 {
+    [ExcludeFromCodeCoverage]
     public class AnswerDto
     {
         public string AnswerText { get; set; }

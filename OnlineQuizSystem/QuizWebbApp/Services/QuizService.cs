@@ -9,6 +9,8 @@ using QuizWebbApp.Config;
 
 namespace QuizWebbApp.Services
 {
+    // OCP -- extending without changing existing code
+
     public class QuizService : IQuizService
     {
         private readonly HttpClient _httpClient;

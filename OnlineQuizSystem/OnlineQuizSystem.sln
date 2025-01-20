@@ -7,6 +7,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OnlineQuizSystemApi", "Onli
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QuizWebbApp", "QuizWebbApp\QuizWebbApp.csproj", "{36CB6522-1D63-48AE-BF3A-A1BA6120BB90}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{236DF061-F83D-45C7-8106-CDB213516C5C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6C24FDDA-A674-4648-802D-9D46807D8DBD}"
+	ProjectSection(SolutionItems) = preProject
+		coverlet.runsettings = coverlet.runsettings
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +28,10 @@ Global
 		{36CB6522-1D63-48AE-BF3A-A1BA6120BB90}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{36CB6522-1D63-48AE-BF3A-A1BA6120BB90}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{36CB6522-1D63-48AE-BF3A-A1BA6120BB90}.Release|Any CPU.Build.0 = Release|Any CPU
+		{236DF061-F83D-45C7-8106-CDB213516C5C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{236DF061-F83D-45C7-8106-CDB213516C5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{236DF061-F83D-45C7-8106-CDB213516C5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{236DF061-F83D-45C7-8106-CDB213516C5C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
