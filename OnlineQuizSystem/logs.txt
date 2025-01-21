@@ -3,3 +3,7 @@
 [20/01/2025 20:04:46] Login failed.
 [20/01/2025 20:06:10] Login failed.
 [20/01/2025 20:07:29] Login failed.
+[21/01/2025 10:52:42] Registration successful.
+[21/01/2025 10:55:58] Registration successful.
+[21/01/2025 11:01:40] Registration successful.
+[21/01/2025 11:02:14] Login successful.
